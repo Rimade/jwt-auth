@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -20,6 +21,9 @@ import { AuthService } from './auth.service';
 import { RegisterRequest, RegisterResponse } from './dto/register.dto';
 import { LoginRequest, LoginResponse } from './dto/login.dto';
 import type { Request, Response } from 'express';
+import { Authorization } from './decorators/authorization.decorator';
+import { Authorized } from './decorators/authorized.decorator';
+import type { User } from '@prisma/client';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -66,11 +70,22 @@ export class AuthController {
   ) {
     return await this.authService.refresh(res, req);
   }
+
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Выход и очистка refresh куки' })
   @ApiOkResponse({ description: 'Успешный выход' })
   async logout(@Res({ passthrough: true }) res: Response) {
     return await this.authService.logout(res);
+  }
+
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Получить текущего пользователя' })
+  @ApiOkResponse({ description: 'Текущий пользователь успешно получен' })
+  @ApiUnauthorizedResponse({ description: 'Пользователь не авторизован' })
+  @Authorization()
+  async getMe(@Authorized('id') user: User) {
+    return user;
   }
 }

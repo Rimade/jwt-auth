@@ -18,7 +18,6 @@ import { timeToMs } from 'src/utils/time-to-ms.util';
 export class AuthService {
   private readonly JWT_ACCESS_TOKEN_TTL: string;
   private readonly JWT_REFRESH_TOKEN_TTL: string;
-
   private readonly COOKIE_DOMAIN: string;
 
   constructor(
@@ -111,6 +110,20 @@ export class AuthService {
   async logout(res: Response) {
     this.setCookie(res, 'refreshToken', new Date(0));
     return { message: 'Вы успешно вышли из системы' };
+  }
+
+  async validate(id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден');
+    }
+
+    return user;
   }
 
   private auth(res: Response, id: string) {
