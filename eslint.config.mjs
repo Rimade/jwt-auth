@@ -70,7 +70,6 @@ export default tseslint.config(
       '@typescript-eslint/prefer-reduce-type-parameter': 'error',
       '@typescript-eslint/prefer-string-starts-ends-with': 'error',
       '@typescript-eslint/strict-boolean-expressions': 'error',
-      '@typescript-eslint/type-annotation-spacing': 'error',
       '@typescript-eslint/unified-signatures': 'error',
     },
   },

@@ -1,4 +1,4 @@
-import { ConfigService } from '@nestjs/config';
+import type { ConfigService } from '@nestjs/config';
 
 /**
  * Проверяет, находится ли приложение в режиме разработки.
